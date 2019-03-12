@@ -17,26 +17,25 @@ public class Main extends Application {
     public int count;
     private Direction direction;
     private boolean closed;
-    private int BOARD_WIDTH = 800;
-    public int BOARD_HEIGHT = 500;
     private GraphicsContext gc;
     private Board board;
-    Const cons = new Const();
+    private Const cons = new Const();
     private static final int FPS = 60;
-    public int activeShapeIndex;
     public BaseShape baseShape;
+    int tmp = cons.activeShapeIndex;
 
     public static void main(String[] args) {
         launch(args);
     }
 
+
     @Override
     public void start(Stage primaryStage) throws Exception {
-        for (int i = -1; i < cons.activeShapeIndex; i++) {
-            primaryStage.setTitle(String.valueOf(cons.activeShapeIndex));
-        }
+        primaryStage.setTitle(String.valueOf(cons.activeShapeIndex));
         Canvas canvas = new Canvas();
+        int BOARD_WIDTH = 800;
         canvas.setWidth(BOARD_WIDTH);
+        int BOARD_HEIGHT = 500;
         canvas.setHeight(BOARD_HEIGHT);
         BorderPane group = new BorderPane(canvas);
         Scene scene = new Scene(group);
@@ -135,9 +134,10 @@ public class Main extends Application {
         }
     }
 
-    private void drawFrame()
-    {
+
+    private void drawFrame() {
         board.drawAll();
+
     }
 
     private void clean() {

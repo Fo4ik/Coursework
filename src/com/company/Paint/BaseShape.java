@@ -13,6 +13,7 @@ public abstract class BaseShape implements Shape {
     private Stage primaryStage;
     public List<Shape> shapes;
 
+
     public BaseShape(GraphicsContext gc, double x, double y, List<Shape> shapes) {
         this.gc = gc;
         this.y = y;

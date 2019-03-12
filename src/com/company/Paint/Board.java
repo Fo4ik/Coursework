@@ -10,6 +10,7 @@ public class Board {
     public List<Shape> shapes = new ArrayList<>();
     public BaseShape baseShape;
     Const cons = new Const();
+    public boolean isSelected;
 
 
     public void move(Direction direction) {
@@ -56,17 +57,19 @@ public class Board {
             case BALL:
                 shapes.add(new Ball(gc, 10, 10, shapes));
                 baseShape = (BaseShape) shapes.get(shapes.size() - 1);
-                cons.count++;
+                cons.count += 1;
                 System.out.println(cons.count);
                 break;
             case SQUARE:
                 shapes.add(new Square(gc, 10, 10, shapes));
                 baseShape = (BaseShape) shapes.get(shapes.size() - 1);
+                cons.count += 1;
                 System.out.println("count " + cons.count);
                 break;
             case TRIANGLE:
                 shapes.add(new Triangle(gc, 10, 10, shapes));
                 baseShape = (BaseShape) shapes.get(shapes.size() - 1);
+                cons.count += 1;
                 System.out.println("count " + cons.count);
                 break;
         }
@@ -137,14 +140,10 @@ public class Board {
         clean();
         if (shapes.size() > 0) {
             if (baseShape != null) {
-                if (baseShape.equals(cons.activeShapeIndex)) {
-                    baseShape.drawAll();
-                } else {
-                    baseShape.drawfill();
-                }
+                baseShape.drawAll();
             }
             for (Shape shape : shapes) {
-                shape.drawAll();
+                shape.drawfill();
             }
         }
     }
@@ -153,7 +152,5 @@ public class Board {
         gc.clearRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
     }
 
-    public void mainObject() {
 
-    }
 }

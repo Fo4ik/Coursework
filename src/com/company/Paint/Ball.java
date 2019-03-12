@@ -22,20 +22,20 @@ public class Ball extends BaseShape {
 
 
     public void drawAll() {
-
-        gc.setStroke(Color.RED);
-        gc.setLineWidth(2);
-        gc.strokeOval(x, y, DIAMETR, DIAMETR);
         gc.setFill(Color.RED);
         gc.fillOval(x, y, DIAMETR, DIAMETR);
+
     }
 
     public void drawfill() {
-        gc.setFill(Color.RED);
-        gc.fillOval(x, y, DIAMETR, DIAMETR);
+        gc.setStroke(Color.RED);
+        gc.setLineWidth(2);
+        gc.strokeOval(x, y, DIAMETR, DIAMETR);
     }
 
     @Override
     public void add() {
     }
+
+
 }
