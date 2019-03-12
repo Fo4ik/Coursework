@@ -32,7 +32,8 @@ public class Square  extends  BaseShape {
 
     @Override
     public void drawfill() {
-        gc.setFill(Color.GREEN);
-        gc.fillRect(x, y, DIAMETR, DIAMETR);
+        gc.setStroke(Color.GREEN);
+        gc.setLineWidth(2);
+        gc.strokeRect(x, y, DIAMETR, DIAMETR);
     }
 }

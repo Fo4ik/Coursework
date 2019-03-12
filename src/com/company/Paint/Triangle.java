@@ -32,8 +32,9 @@ public class Triangle extends BaseShape {
 
     @Override
     public void drawfill() {
-        gc.setFill(Color.BLUE);
-        gc.fillPolygon(new double[]{x + DIAMETR / 2, x + DIAMETR, x}, new double[]{y, y + DIAMETR, y + DIAMETR}, 3);
+        gc.setStroke(Color.BLUE);
+        gc.setLineWidth(2);
+        gc.strokePolygon(new double[]{x + DIAMETR / 2, x + DIAMETR, x}, new double[]{y, y + DIAMETR, y + DIAMETR}, 3);
 
     }
 }
