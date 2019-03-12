@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Board {
-    public int DIAMETR = 30;
     private GraphicsContext gc;
     public List<Shape> shapes = new ArrayList<>();
     public BaseShape baseShape;
@@ -14,30 +13,29 @@ public class Board {
 
 
     public void move(Direction direction) {
-        if (cons.index.containsValue(cons.activeShapeIndex)) {//передать данные об двигаемом обьекте.
-            switch (direction) {
-                case UP:
-                    if (cons.y > 0) {
-                        cons.y -= 5;
-                    }
-                    break;
-                case RIGHT:
-                    if (cons.x + DIAMETR < gc.getCanvas().getWidth()) {
-                        cons.x += 5;
-                    }
-                    break;
-                case DOWN:
-                    if (cons.y + DIAMETR < gc.getCanvas().getHeight()) {
-                        cons.y += 5;
-                    }
-                    break;
-                case LEFT:
-                    if (cons.x > 0) {
-                        cons.x -= 5;
-                    }
-                    break;
-            }
+        switch (direction) {
+            case UP:
+                if (baseShape.y > 0) {
+                    baseShape.y -= 5;
+                }
+                break;
+            case RIGHT:
+                if (baseShape.x + baseShape.DIAMETR < gc.getCanvas().getWidth()) {
+                    baseShape.x += 5;
+                }
+                break;
+            case DOWN:
+                if (baseShape.y + baseShape.DIAMETR < gc.getCanvas().getHeight()) {
+                    baseShape.y += 5;
+                }
+                break;
+            case LEFT:
+                if (baseShape.x > 0) {
+                    baseShape.x -= 5;
+                }
+                break;
         }
+
     }
 
     public enum Figures {
@@ -58,25 +56,17 @@ public class Board {
             case BALL:
                 shapes.add(new Ball(gc, 10, 10, shapes));
                 baseShape = (BaseShape) shapes.get(shapes.size() - 1);
-                cons.count = cons.count + 1;
-                cons.Index = cons.Index + 1;
-                cons.index.put(cons.count, cons.Index);
+                cons.count++;
                 System.out.println(cons.count);
                 break;
             case SQUARE:
                 shapes.add(new Square(gc, 10, 10, shapes));
                 baseShape = (BaseShape) shapes.get(shapes.size() - 1);
-                cons.count = cons.count + 1;
-                cons.Index = cons.Index + 1;
-                cons.index.put(cons.count, cons.Index);
                 System.out.println("count " + cons.count);
                 break;
             case TRIANGLE:
                 shapes.add(new Triangle(gc, 10, 10, shapes));
                 baseShape = (BaseShape) shapes.get(shapes.size() - 1);
-                cons.count = cons.count + 1;
-                cons.Index = cons.Index + 1;
-                cons.index.put(cons.count, cons.Index);
                 System.out.println("count " + cons.count);
                 break;
         }
@@ -106,7 +96,7 @@ public class Board {
             try {
                 baseShape = (BaseShape) shapes.get(shapes.indexOf(baseShape) + 1);
                 cons.activeShapeIndex = shapes.indexOf(baseShape);
-                System.out.println("insex " + cons.activeShapeIndex);
+                System.out.println("index " + cons.activeShapeIndex);
             } catch (IndexOutOfBoundsException e) {
                 baseShape = (BaseShape) shapes.get(0);
             }
@@ -118,7 +108,7 @@ public class Board {
             try {
                 baseShape = (BaseShape) shapes.get(shapes.indexOf(baseShape) - 1);
                 cons.activeShapeIndex = shapes.indexOf(baseShape);
-                System.out.println("insex " + cons.activeShapeIndex);
+                System.out.println("index " + cons.activeShapeIndex);
             } catch (IndexOutOfBoundsException e) {
                 baseShape = (BaseShape) shapes.get(0);
             }
@@ -136,7 +126,9 @@ public class Board {
     public void resizePlus() {
         clean();
         if (baseShape != null) {
-            baseShape.DIAMETR += 5;
+            if (baseShape.DIAMETR < gc.getCanvas().getHeight() && baseShape.DIAMETR < gc.getCanvas().getWidth()) {
+                baseShape.DIAMETR += 5;
+            }
         }
     }
 
@@ -145,7 +137,11 @@ public class Board {
         clean();
         if (shapes.size() > 0) {
             if (baseShape != null) {
-                baseShape.drawAll();
+                if (baseShape.equals(cons.activeShapeIndex)) {
+                    baseShape.drawAll();
+                } else {
+                    baseShape.drawfill();
+                }
             }
             for (Shape shape : shapes) {
                 shape.drawAll();
@@ -157,5 +153,7 @@ public class Board {
         gc.clearRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
     }
 
+    public void mainObject() {
 
+    }
 }

@@ -8,8 +8,8 @@ import java.util.List;
 public abstract class BaseShape implements Shape {
     public int DIAMETR=30;
     protected GraphicsContext gc;
-    protected double x;
-    protected double y;
+    public double x;
+    public double y;
     private Stage primaryStage;
     public List<Shape> shapes;
 
