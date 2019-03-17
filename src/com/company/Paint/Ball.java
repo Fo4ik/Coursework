@@ -9,8 +9,12 @@ public class Ball extends BaseShape {
     public List<Shape> shapes;
     Const cons = new Const();
 
-    public Ball(GraphicsContext gc, double x, double y, List<Shape> shapes) {
+    public Ball(GraphicsContext gc, int x, int y, List<Shape> shapes) {
         super(gc, x, y, shapes);
+    }
+
+    public Ball(BaseShape baseShape) {
+        super(baseShape);
     }
 
 

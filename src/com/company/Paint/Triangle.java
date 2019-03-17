@@ -8,10 +8,13 @@ import java.util.List;
 public class Triangle extends BaseShape {
     Const cons = new Const();
 
-    public Triangle(GraphicsContext gc, double x, double y, List<Shape> shapes) {
+    public Triangle(GraphicsContext gc, int x, int y, List<Shape> shapes) {
         super(gc, x, y, shapes);
     }
 
+    public Triangle(BaseShape baseShape) {
+        super(baseShape);
+    }
 
 
     @Override

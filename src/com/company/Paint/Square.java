@@ -8,8 +8,12 @@ import java.util.List;
 public class Square  extends  BaseShape {
     Const cons = new Const();
 
-    public Square(GraphicsContext gc, double x, double y, List<Shape> shapes) {
+    public Square(GraphicsContext gc, int x, int y, List<Shape> shapes) {
         super(gc, x, y, shapes);
+    }
+
+    public Square(BaseShape baseShape) {
+        super(baseShape);
     }
 
 

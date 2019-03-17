@@ -9,6 +9,7 @@ import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
@@ -22,16 +23,19 @@ public class Main extends Application {
     private Const cons = new Const();
     private static final int FPS = 60;
     public BaseShape baseShape;
-    int tmp = cons.activeShapeIndex;
+    private int index = cons.activeShapeIndex;
 
     public static void main(String[] args) {
         launch(args);
     }
 
+    public void activityObject(Stage primaryStage) {
+        String s = Integer.toString(index);
+        primaryStage.setTitle(s);
+    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        primaryStage.setTitle(String.valueOf(cons.activeShapeIndex));
         Canvas canvas = new Canvas();
         int BOARD_WIDTH = 800;
         canvas.setWidth(BOARD_WIDTH);
@@ -49,6 +53,10 @@ public class Main extends Application {
         board = new Board(gc);
         scene.setOnKeyPressed(event -> {
             switch (event.getCode()) {
+                case C:{
+                    board.copy();
+                    Logger.log("Copy");
+                }break;
                 case DIGIT1: {
                     board.add(Board.Figures.BALL);
                     Logger.log("Add BALL");
@@ -89,28 +97,39 @@ public class Main extends Application {
                     Logger.log("Previous");
                 }
                 break;
-                case W: {
+                case UP: {
                     board.move(Direction.UP);
                     Logger.log("Up");
                 }
                 break;
-                case S: {
+                case DOWN: {
                     board.move(Direction.DOWN);
                     Logger.log("Down");
                 }
                 break;
-                case A: {
+                case LEFT: {
                     board.move(Direction.LEFT);
                     Logger.log("Left");
                 }
                 break;
-                case D: {
+                case RIGHT: {
                     board.move(Direction.RIGHT);
                     Logger.log("Right");
                 }
                 break;
+                case ALT: {
+                    board.changeFigure();
+                    Logger.log("changeFigure");
+                }
+                break;
             }
         });
+        scene.setOnMousePressed(event -> {
+            if (event.isControlDown()) {
+                board.merge((int) event.getSceneX(), (int) event.getSceneY());
+            }
+        });
+
         new Thread(this::runMainGameLoopInThread).start();
         board.drawAll();
     }
@@ -123,7 +142,7 @@ public class Main extends Application {
 
     private void runMainGameLoopInThread() {
         while (!closed) {
-            // run in UI thread
+
             Platform.runLater(this::drawFrame);
             try {
                 int pauseBetweenFramesMillis = 1000 / FPS;

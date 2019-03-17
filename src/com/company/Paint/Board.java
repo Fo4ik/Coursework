@@ -7,8 +7,8 @@ import java.util.List;
 
 public class Board {
     private GraphicsContext gc;
-    public List<Shape> shapes = new ArrayList<>();
-    public BaseShape baseShape;
+    private List<Shape> shapes = new ArrayList<>();
+    private BaseShape baseShape;
     Const cons = new Const();
     public boolean isSelected;
 
@@ -57,18 +57,24 @@ public class Board {
             case BALL:
                 shapes.add(new Ball(gc, 10, 10, shapes));
                 baseShape = (BaseShape) shapes.get(shapes.size() - 1);
+                cons.activeShapeIndex = shapes.indexOf(baseShape);
+                System.out.println("index " + cons.activeShapeIndex);
                 cons.count += 1;
-                System.out.println(cons.count);
+                System.out.println("count " + cons.count);
                 break;
             case SQUARE:
                 shapes.add(new Square(gc, 10, 10, shapes));
                 baseShape = (BaseShape) shapes.get(shapes.size() - 1);
+                cons.activeShapeIndex = shapes.indexOf(baseShape);
+                System.out.println("index " + cons.activeShapeIndex);
                 cons.count += 1;
                 System.out.println("count " + cons.count);
                 break;
             case TRIANGLE:
                 shapes.add(new Triangle(gc, 10, 10, shapes));
                 baseShape = (BaseShape) shapes.get(shapes.size() - 1);
+                cons.activeShapeIndex = shapes.indexOf(baseShape);
+                System.out.println("index " + cons.activeShapeIndex);
                 cons.count += 1;
                 System.out.println("count " + cons.count);
                 break;
@@ -97,8 +103,8 @@ public class Board {
     public void next() {
         if (baseShape != null && shapes.size() > 0) {
             try {
+                cons.activeShapeIndex = shapes.indexOf(baseShape) + 1;
                 baseShape = (BaseShape) shapes.get(shapes.indexOf(baseShape) + 1);
-                cons.activeShapeIndex = shapes.indexOf(baseShape);
                 System.out.println("index " + cons.activeShapeIndex);
             } catch (IndexOutOfBoundsException e) {
                 baseShape = (BaseShape) shapes.get(0);
@@ -109,9 +115,12 @@ public class Board {
     public void previous() {
         if (baseShape != null && shapes.size() > 0) {
             try {
+                cons.activeShapeIndex = shapes.indexOf(baseShape) - 1;
                 baseShape = (BaseShape) shapes.get(shapes.indexOf(baseShape) - 1);
-                cons.activeShapeIndex = shapes.indexOf(baseShape);
                 System.out.println("index " + cons.activeShapeIndex);
+                if (shapes.size() == 0) {
+                    baseShape = (BaseShape) shapes.get(shapes.indexOf(0));
+                }
             } catch (IndexOutOfBoundsException e) {
                 baseShape = (BaseShape) shapes.get(0);
             }
@@ -147,6 +156,81 @@ public class Board {
             }
         }
     }
+
+    public void changeFigure() {
+        if (baseShape != null && shapes.size() > 1) {
+            try {
+                baseShape = (BaseShape) shapes.get(shapes.indexOf(baseShape) + 1);
+            } catch (IndexOutOfBoundsException e) {
+                baseShape = (BaseShape) shapes.get(0);
+            }
+        }
+    }
+
+
+    public void copy() {
+        if (baseShape != null) {
+            if (baseShape instanceof Ball) {
+                shapes.add(new Ball(baseShape));
+            } else if (baseShape instanceof Square) {
+                shapes.add(new Square(baseShape));
+            } else if (baseShape instanceof Triangle) {
+                shapes.add(new Triangle(baseShape));
+            }
+            baseShape = (BaseShape) shapes.get(shapes.size() - 1);
+        }
+    }
+
+
+    public void merge(int findX, int findY) {
+        for (Shape shape : shapes) {
+            if (shape == baseShape) {
+                continue;
+            }
+
+            if (!(shape instanceof Group)) {
+                if (checkDistance((BaseShape) shape, findX, findY)) {
+                    addGroup((BaseShape) shape);
+                    break;
+                }
+            } else {
+                for (int j = 0; j < ((Group) shape).shapesGroup.size(); j++) {
+                    if (checkDistance(((Group) shape).shapesGroup.get(j), findX, findY)) {
+                        addGroup((BaseShape) shape);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    private boolean checkDistance(BaseShape baseShape, int findX, int findY) {
+        return baseShape.getX() <= findX
+                && baseShape.getX() + baseShape.getDiameter() >= findX
+                && baseShape.getY() <= findY
+                && baseShape.getY() + baseShape.getDiameter() >= findY;
+    }
+
+    private void addGroup(BaseShape baseShape) {
+        if (baseShape instanceof Group) {
+            for (int i = 0; i < ((Group) baseShape).shapesGroup.size(); i++) {
+                ((Group) baseShape).addGroup(((Group) baseShape).shapesGroup.get(i));
+            }
+            shapes.remove(baseShape);
+        } else {
+            Group group = new Group(gc, 0, 0, null);
+
+            group.addGroup(baseShape);
+            shapes.remove(baseShape);
+
+            group.addGroup(baseShape);
+            shapes.remove(baseShape);
+
+            shapes.add(group);
+            baseShape = group;
+        }
+    }
+
 
     private void clean() {
         gc.clearRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
